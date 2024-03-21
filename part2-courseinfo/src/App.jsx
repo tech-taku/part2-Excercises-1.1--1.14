@@ -69,12 +69,11 @@ const App = () => {
       <div>
         <Header heading="Web development curriculum" />
 
-        {courses.map((course) => (
-          console.log(course),
-          <Course key={course.id} course={course} />
-          
-        ))}
-        
+        {courses.map(
+          (course) => (
+            console.log(course), (<Course key={course.id} course={course} />)
+          )
+        )}
       </div>
 
       <div>
