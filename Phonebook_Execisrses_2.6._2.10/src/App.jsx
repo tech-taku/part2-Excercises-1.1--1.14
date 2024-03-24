@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Filter from "./filter";
 import PersonForm from "./form";
 import Person from "./person";
+import peopleServices from "./services/peopleServices";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -12,25 +13,40 @@ const App = () => {
   const [searchTerm, setNewSearchTerm] = useState("");
   const [searchResults, setNewSearchResults] = useState([]);
 
+  // Get everything from the db first
+  useEffect(() => {
+    peopleServices.getAll().then((persons) => setPersons(persons));
+  }, []);
+
   // Componet handler functions
   const addContact = (event) => {
     event.preventDefault();
-    // Update the phnebook with names
-
+    // Update the phonebook with names
     const newPerson = {
       name: newName,
       phone: newPhone,
     };
-
     // create a placeholder for the new name
     const checkedName = persons.find(
       (person) => person.name === newPerson.name
     );
 
-    // check whether the new name is already in the array...
-    checkedName
-      ? alert(`The name ${checkedName.name} is already in`)
-      : setPersons([...persons, newPerson]);
+    // check whether the new name is already in the array- using the following with an else may actually return unexpected behaviour
+    if (checkedName) {
+      alert(`The name ${checkedName.name} is already in`);
+      setNewName("")
+      setNewPhone("")
+      return; //To disallow the saving of that entry
+    }
+
+    // tried to make use of the following and it didnt work:
+    // checkedName && alert(`The name ${checkedName.name} is already in`)
+    // It will actually check if the name is there but will continue to go and save the details
+
+
+    peopleServices
+      .create(newPerson)
+      .then((returnName) => setPersons(persons.concat(returnName)));
     setNewName("");
     setNewPhone("");
   };
