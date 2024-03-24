@@ -1,61 +1,70 @@
 import { useState } from "react";
+import Filter from "./filter";
+import PersonForm from "./form";
+import Person from "./person";
 
 const App = () => {
-  const [contacts, setContacts] = useState([]);
-  const [newContact, setNewContact] = useState("");
-  const [numbers, setNumbers] = useState([]);
-  const [newNumber, setNewNumber] = useState("");
+  const [persons, setPersons] = useState([]);
+  const [newName, setNewName] = useState("");
+  const [newPhone, setNewPhone] = useState("");
 
-  // event handler on form submission
+  // Manage filter ir search state
+  const [searchTerm, setNewSearchTerm] = useState("");
+  const [searchResults, setNewSearchResults] = useState([]);
+
+  // Componet handler functions
   const addContact = (event) => {
     event.preventDefault();
-    // const newPerson = {
-    //   name: newContact,
-    //   id: contacts.length + 1,
-    // R
-    // };
-    const newPerson = newContact;
-    const newContactNumber = newNumber;
-    {
-      contacts.includes(newPerson) || numbers.includes(newContactNumber)
-        ? alert(
-            `${newPerson} and ${newContactNumber} is already added to the phonebook`
-          )
-        : setContacts(contacts.concat(newPerson)) &&
-          setNumbers(numbers.concat(newContactNumber));
-    }
+    // Update the phnebook with names
 
-    setNewContact("");
-    setNewNumber("");
-    console.log(contacts, numbers);
+    const newPerson = {
+      name: newName,
+      phone: newPhone,
+    };
+
+    // create a placeholder for the new name
+    const checkedName = persons.find(
+      (person) => person.name === newPerson.name
+    );
+
+    // check whether the new name is already in the array...
+    checkedName
+      ? alert(`The name ${checkedName.name} is already in`)
+      : setPersons([...persons, newPerson]);
+    setNewName("");
+    setNewPhone("");
   };
 
-  const handleFormChange = (event) => {
-    setNewContact(event.target.value);
-    setNewNumber(event.target.value)
+  const updateNameDetails = (event) => {
+    setNewName(event.target.value);
+  };
+
+  const updatePhoneDetails = (event) => {
+    setNewPhone(event.target.value);
+  };
+
+  const handleSearch = (event) => {
+    // ensure all results are displayed when search is empty
+    setNewSearchTerm(event.target.value);
+    // display set
+    const searchedResults = persons.filter((person) =>
+      person.name.includes(searchTerm)
+    );
+    setNewSearchResults(searchedResults);
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <form onSubmit={addContact}>
-        <div>
-          Name: <input value={newContact} onChange={handleFormChange} />
-        </div>
-        <div>
-          Number: <input />
-        </div>
-        <button type="submit">add</button>
-      </form>
-      <h2>Numbers</h2>
-      <ul>
-        {contacts.map((contact) => {
-          return <li key={contact}>{contact}</li>;
-        })}
-        {numbers.map((number) => {
-          return <li key={number}>{number}</li>;
-        })}
-      </ul>
+      <Filter value={searchTerm} onSearch={handleSearch} />
+      <PersonForm
+        nameValue={newName}
+        phoneValue={newPhone}
+        onUpdateNameDetails={updateNameDetails}
+        onUpdatePhoneDetails={updatePhoneDetails}
+        OnAddContact={addContact}
+      />
+      <Person searchResults={searchResults} persons={persons} />
     </div>
   );
 };
