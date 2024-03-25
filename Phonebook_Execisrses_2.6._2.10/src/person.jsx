@@ -7,6 +7,7 @@ const Person = ({searchResults, persons, onHandleDelete}) => {
             <li key={person.id}>
               {" "}
               {person.name} {person.phone}
+              <button onClick={() => { onHandleDelete(person.id)}}>Delete</button>
             </li>
           ))
         : persons.map((person) => (

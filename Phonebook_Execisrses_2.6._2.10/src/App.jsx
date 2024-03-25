@@ -4,21 +4,34 @@ import PersonForm from "./form";
 import Person from "./person";
 import peopleServices from "./services/peopleServices";
 
+const Footer = () => {
+  const footerStyle = {
+    color: "green",
+    fontStyle: "italic",
+    fontSize: 16,
+  };
+
+  return (
+    <div style={footerStyle}>
+      <br />
+      <em>Phonebook, Created by Ashley Mapfumo of Harare</em>
+    </div>
+  );
+};
 const App = () => {
+  // Manage persons and filter state
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
-
-  // Manage filter ir search state
   const [searchTerm, setNewSearchTerm] = useState("");
   const [searchResults, setNewSearchResults] = useState([]);
 
-  // Get everything from the db first
+  // Pull resources from the database
   useEffect(() => {
     peopleServices.getAll().then((persons) => setPersons(persons));
   }, []);
 
-  // Componet handler functions
+  // Component handler function to add form data and save it to the db
   const addContact = (event) => {
     event.preventDefault();
     // Update the phonebook with names
@@ -32,7 +45,7 @@ const App = () => {
     );
 
     // check whether the new name is already in the array- using the following with an else may actually return unexpected behaviour
-    
+
     if (checkedName) {
       alert(`The name ${checkedName.name} is already added to the phonebook`);
       setNewName("");
@@ -64,7 +77,7 @@ const App = () => {
     setNewSearchTerm(event.target.value);
     // display set
     const searchedResults = persons.filter((person) =>
-      person.name.includes(searchTerm)
+      person.name.includes(event.target.value)
     );
     setNewSearchResults(searchedResults);
   };
@@ -75,6 +88,7 @@ const App = () => {
       .then(setPersons(persons.filter((person) => person.id !== id)));
   };
 
+  
   return (
     <div>
       <h2>Phonebook</h2>
@@ -91,6 +105,7 @@ const App = () => {
         persons={persons}
         onHandleDelete={handleDelete}
       />
+      <Footer />
     </div>
   );
 };
