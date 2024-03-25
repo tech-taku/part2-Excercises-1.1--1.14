@@ -17,9 +17,18 @@ const create = (newObject) => {
 };
 
 // Update the db
-const update = (id, newObject) => {
-  const request = axios.update(`${baseUrl}/${id}`, newObject);
+const update = (id, updatedObject) => {
+  const request = axios.update(`${baseUrl}/${id}`, updatedObject);
   return request.then((response) => response.data);
 };
 
-export default { getAll, create, update };
+//Delete an entry from the database
+
+const deleteItem = (id) => {
+    const request = axios.delete(`${baseUrl}/${id}`)
+    return request.then((response) => response.data)
+}
+
+export default { getAll, create, update, deleteItem};
+
+ 

@@ -12,6 +12,7 @@ const PersonForm = ({
           <h2>Add New</h2>
           name: <input value={nameValue} onChange={onUpdateNameDetails} />
           phone: <input value={phoneValue} onChange={onUpdatePhoneDetails} />
+          
         </div>
         <div>
           <button type="submit">add</button>

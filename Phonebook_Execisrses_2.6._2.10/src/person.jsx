@@ -1,4 +1,4 @@
-const Person = ({searchResults, persons}) => {
+const Person = ({searchResults, persons, onHandleDelete}) => {
   return (
     <div>
       <h2>Numbers</h2>
@@ -13,6 +13,7 @@ const Person = ({searchResults, persons}) => {
             <li key={person.id}>
               {" "}
               {person.name} {person.phone}
+              <button onClick={() => onHandleDelete(person.id)}>Delete</button>
             </li>
           ))}
     </div>

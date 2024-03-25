@@ -24,7 +24,7 @@ const App = () => {
     // Update the phonebook with names
     const newPerson = {
       name: newName,
-      phone: newPhone,
+      number: newPhone,
     };
     // create a placeholder for the new name
     const checkedName = persons.find(
@@ -32,17 +32,17 @@ const App = () => {
     );
 
     // check whether the new name is already in the array- using the following with an else may actually return unexpected behaviour
+    
     if (checkedName) {
-      alert(`The name ${checkedName.name} is already in`);
-      setNewName("")
-      setNewPhone("")
+      alert(`The name ${checkedName.name} is already added to the phonebook`);
+      setNewName("");
+      setNewPhone("");
       return; //To disallow the saving of that entry
     }
 
     // tried to make use of the following and it didnt work:
     // checkedName && alert(`The name ${checkedName.name} is already in`)
     // It will actually check if the name is there but will continue to go and save the details
-
 
     peopleServices
       .create(newPerson)
@@ -69,6 +69,12 @@ const App = () => {
     setNewSearchResults(searchedResults);
   };
 
+  const handleDelete = (id) => {
+    peopleServices
+      .deleteItem(id)
+      .then(setPersons(persons.filter((person) => person.id !== id)));
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -80,7 +86,11 @@ const App = () => {
         onUpdatePhoneDetails={updatePhoneDetails}
         OnAddContact={addContact}
       />
-      <Person searchResults={searchResults} persons={persons} />
+      <Person
+        searchResults={searchResults}
+        persons={persons}
+        onHandleDelete={handleDelete}
+      />
     </div>
   );
 };
